@@ -22,7 +22,7 @@ ED.sockets = ( function ( document, window, undefined ) {
     });
 
     socket.on('player', function (data) {
-      console.log(data);
+      console.log('player:', data);
       ee.emitEvent( 'otherPlayerCreated', [data] );
     });
 

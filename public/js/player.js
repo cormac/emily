@@ -9,7 +9,8 @@ ED.player = ( function (window, document, undefined) {
       otherPlayer,
       offset = 3,
       playerContainer,
-      otherPlayerContainer,
+      newPlayer,
+      otherPlayerContainers = {},
       stage,
       ee = ED.events.ee;
 
@@ -34,7 +35,8 @@ ED.player = ( function (window, document, undefined) {
     document.addEventListener( 'keydown', keyListener, false );
   };
 
-  player.prototype.addPlayerToStage = function ()  {
+
+  player.prototype.addPlayerToStage = function (playerObject)  {
     stage = ED.easel.getStage();
     console.log( stage );
     console.log('addPlayerToStage');
@@ -133,14 +135,21 @@ ED.player = ( function (window, document, undefined) {
 
   otherPlayer.prototype._move = function ( playerObject ) {
     console.log ( playerObject );
+    console.log ( this );
+
     if ( playerObject.id === this.who ) {
-      otherPlayerContainer.x = playerObject.x;
-      otherPlayerContainer.y = playerObject.y;
+      for ( var index in otherPlayerContainers ) {
+        console.log ( otherPlayerContainers );
+
+        otherPlayerContainer.x = playerObject.x;
+        otherPlayerContainer.y = playerObject.y;
+      }
     }
 
   };
 
   otherPlayer.prototype._addPlayerToScene = function ( playerObject ) {
+    var otherPlayerContainer;
     console.log( 'add other player' );
 
     stage = ED.easel.getStage();
@@ -152,6 +161,7 @@ ED.player = ( function (window, document, undefined) {
     otherPlayerContainer.addChild(circle);
     stage.addChild(otherPlayerContainer);
     stage.update();
+    otherPlayerContainers[playerObject.who.id] =  otherPlayerContainer;
   };
 
   return {
