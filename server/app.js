@@ -20,19 +20,31 @@ app.configure(function(){
 });
 
 var players = {};
+var birds = {};
 var noPlayers = 0;
+var noBirds = 0;
 
 io.on('connection', function (client) {
   noPlayers = noPlayers + 1;
+  noBirds = noBirds + 1;
   players[noPlayers] = setUpPlayer(client, noPlayers);
-  //TODO we have to create a bird
+  //birds[noBirds] = setUpBird(client, noBirds);
 });
 
-function setUpPlayer(client, playerPos){
+function setUpPlayer(client, playerNo){
   var player = {};
-  player.id = playerPos;
-  client.emit('youAre', {who: player.id});
-  //client.broadcast.emit('connected', {who: player.id, cause: 'connected'});
+  player.id = playerNo;
+  player.position = { x: 19, y: 10};
+  //Tell yourself who you are
+  client.emit('youAre', {who: player});
+  //Tell others you arrived
+  client.broadcast.emit('player', {who: player});
+  //Tell me all the other players around
+  for (var pla in players){
+    console.log(pla);
+    client.emit('others', { who : players[pla] });
+  }
+
   client.on('disconnect', function(){
     delete players[player.id];
     //TODO we have to delete a Bird
@@ -43,5 +55,47 @@ function setUpPlayer(client, playerPos){
   });
 
   return player;
+}
+
+function setUpBird(client, birdPos){
+  var bird = {};
+  bird.id = birdPos;
+  bird.keepFlying = true;
+  client.broadcast.emit('birdCreated', {bird: bird.id});
+  client.on('deleteBird', function(){
+    delete birds[bird.id];
+    //TODO we have to delete a Bird
+  });
+  
+  // When a bird is caught, then something happens?
+  client.on('caughtBird', function (msg) {
+    client.broadcast.emit('caughtBird', msg);
+    //TODO probably something like stop the bird flying
+  });
+
+  bird.birdFlying = function(){
+    var xpos = generateBirdPos();
+    var ypos = generateBirdPos();
+    client.broadcast.emit('birdCoords', { bird: bird.id, x: xpos, y: ypos});
+    console.log({ bird: bird.id, x: xpos, y: ypos});
+  }
+  
+  var initialPos = 10;
+  var forward = true;
+  function generateBirdPos() {
+    if (initialPos < 20 && forward){
+      forward = true;
+      return initialPos = initialPos + 1;
+    }
+    else if (initialPos > 2) {
+      forward = false;
+      return initialPos = initialPos - 1;
+    } else if (initialPos == 2) forward = true;
+  }
+  console.log('Start bird animation on server');
+  
+  //var birdFlyingInt = setInterval(bird.birdFlying, 1000);
+
+  return bird;
 }
 
