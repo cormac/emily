@@ -5,7 +5,7 @@
 var ED = ED || {};
 ED.player = ( function (window, document, undefined) {
   var player,
-      ee = CK.events.ee;
+      ee = ED.events.ee;
 
 
   // constructor for player
