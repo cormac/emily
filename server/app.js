@@ -19,7 +19,12 @@ app.configure(function(){
   app.use(express.static(__dirname + '/../public'));
 });
 
-var setPlayers = ['father', 'mother', 'brother', 'sister'];
+var setPlayers = { 
+  0: { free: true, name: 'father'},
+  1: { free: true, name: 'mother'},
+  2: { free: true, name: 'brother'},
+  3: { free: true, name: 'sister'}
+};
 
 var players = {};
 var birds = {};
@@ -35,18 +40,25 @@ io.on('connection', function (client) {
     player.name = 'No more positions!';
     player.id = -1;
     client.emit('youAre', {who: player});
+    noPlayers = noPlayers -1;
   }
   else {
-    players[noPlayers] = setUpPlayer(client, noPlayers);
-    //birds[noBirds] = setUpBird(client, noBirds);
+    for (var pl in setPlayers) {
+      if (setPlayers[pl].free){
+        players[pl] = setUpPlayer(client, pl);
+        //birds[noBirds] = setUpBird(client, noBirds);
+        break;
+      }
+    }
   }
 });
 
 function setUpPlayer(client, playerNo){
   var player = {};
   player.id = playerNo;
-  player.name = setPlayers[playerNo -1];
+  player.name = setPlayers[playerNo].name;
   player.position = { x: (10 + (10 * playerNo)), y: (10 + (5 * playerNo))};
+  setPlayers[playerNo].free = false;
   //Tell yourself who you are
   client.emit('youAre', {who: player});
   //Tell others you arrived
@@ -57,12 +69,14 @@ function setUpPlayer(client, playerNo){
   }
 
   client.on('disconnect', function(){
+    // clear the position in the array of names
     delete players[player.id];
+    noPlayers = noPlayers -1;
+    setPlayers[playerNo].free = true;
     //TODO we have to delete a Bird
   });
   client.on('coordinates', function (msg) {
     client.broadcast.emit('coordinates', msg);
-    //TODO we have to create a bird
   });
 
   return player;
