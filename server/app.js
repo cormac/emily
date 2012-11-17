@@ -53,6 +53,10 @@ io.on('connection', function (client) {
       }
     }
   }
+  //TODO have to emit all the birds created
+  for (var b in birds) {
+    client.emit('bc', birds[b]);
+  }
 });
 
 function setUpPlayer(client, playerNo){
@@ -89,7 +93,10 @@ function setUpBird(client, birdPos){
   var bird = {};
   bird.id = birdPos;
   bird.keepFlying = true;
-  client.broadcast.emit('birdCreated', {bird: bird.id});
+  client.broadcast.emit('bc', {bird: bird.id, x: 50, y: 50});
+  bird.x = 10 + (10 * birdPos);
+  bird.y = 10 + (10 * birdPos);
+  //birds[birdPos] = bird;
   client.on('deleteBird', function(){
     delete birds[bird.id];
     //TODO we have to delete a Bird
@@ -105,32 +112,37 @@ function setUpBird(client, birdPos){
     var xpos = generateBirdPos();
     var ypos = generateBirdPos();
     client.broadcast.emit('birdCoords', { bird: bird.id, x: xpos, y: ypos});
+    client.emit('birdCoords', { bird: bird.id, x: xpos, y: ypos});
     console.log({ bird: bird.id, x: xpos, y: ypos});
   }
   
-  var initialPos = 100;
+  var initialPosX = bird.x;
+  var initialPosY = bird.y;
   var forward = true;
   var rnd;
   function generateBirdPos() {
-    if (initialPos > 300)
+    if (initialPosX > 300 || initialPosY > 300)
       forward = false;
 
-    if (initialPos < 10)
+    if (initialPosX <10 || initialPosY < 10)
       forward = true;
 
     rnd = Math.floor(Math.random() * 10) + 1;
     if (forward)
       if (rnd % 2 === 0)
-        return initialPos = initialPos + rnd;
+        return initialPosX = initialPosX + rnd;
       else
-        return initialPos = initialPos + rnd + rnd;
+        return initialPosY = initialPosY + rnd;
     else
-      return initialPos = initialPos - rnd;
+      if (rnd % 2 === 0)
+        return initialPosX = initialPosX - rnd;
+      else
+        return initialPosY = initialPosY - rnd;
 
   }
   console.log('Start bird animation on server for bird: ', bird.id);
   
-  var birdFlyingInt = setInterval(bird.birdFlying, 100);
+  var birdFlyingInt = setInterval(bird.birdFlying, 200);
 
   return bird;
 }
