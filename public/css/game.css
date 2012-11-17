@@ -7,4 +7,7 @@ body {
   padding: 10px;
   border: 1px dashed;
   outline: 2px solid #6374AB;
+  background-image: url('../img/Background_with_emily.bmp');
+  background-repeat: no-repeat;
+}
 }

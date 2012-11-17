@@ -42,7 +42,6 @@ ED.bird = ( function (window, document, undefined) {
 
   ee.addListener ( 'birdCoords', callMove );
 
-  var self = this;
   var attacked = function(attack){
     console.log('Player Id:', attack.playerId);
     if (Math.abs(birdContainer.x - attack.x) < 10){
