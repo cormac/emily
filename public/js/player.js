@@ -5,10 +5,13 @@
 var ED = ED || {};
 ED.player = ( function (window, document, undefined) {
   var player,
+      playerContainer,
+      playerFrame,
+      playerDirection,
       playerList = [],
       otherPlayer,
-      offset = 3,
-      playerContainer,
+      offset = 17,
+      getCurrentFrame,
       newPlayer,
       otherPlayerContainers = {},
       stage,
@@ -38,19 +41,22 @@ ED.player = ( function (window, document, undefined) {
 
   player.prototype.addPlayerToStage = function (playerObject)  {
     stage = ED.easel.getStage();
-    console.log( stage );
-    console.log('addPlayerToStage');
-    var circle = new createjs.Shape();
-    console.log( circle );
-    circle.graphics.beginFill("green").drawCircle(0, 0, 50);
+    player = ED.Animations.getPlayerAnimation(playerObject.name);
+    playerFrame = "left";
     playerContainer = new createjs.Container();
-    console.log( playerContainer );
     playerContainer.x  = playerObject.who.position.x;
     playerContainer.y  = playerObject.who.position.y;
-    playerContainer.addChild(circle);
+    playerContainer.addChild( player );
     stage.addChild(playerContainer);
+    player.gotoAndPlay( getCurrentFrame(playerFrame) );
     stage.update();
+  };
 
+  getCurrentFrame = function ( frame ) {
+    if ( frame === "left" )
+       return "right";
+    else 
+       return "left";
   };
 
 
@@ -58,18 +64,15 @@ ED.player = ( function (window, document, undefined) {
   // limit the attack to 1 per second
   player.prototype.keyDown = function ( e ) {
       console.log ( e.keyCode );
-      var direction;
       if ( e.keyCode === 87 ) { //w
         playerContainer.y = playerContainer.y - offset ;
-        direction = 'up';
       }
       if ( e.keyCode === 83 ) { //s
         playerContainer.y = playerContainer.y + offset;
-        direction = 'down';
       }
       if ( e.keyCode === 65 ) { //a
         playerContainer.x = playerContainer.x - offset;
-        direction = 'left';
+        playerDirection = 'left';
       }
       if ( e.keyCode === 68 ) { //d
         playerContainer.x = playerContainer.x + offset ;
@@ -78,6 +81,9 @@ ED.player = ( function (window, document, undefined) {
       if ( e.keyCode === 32 ) { //space
         this.triggerAttack ( direction );
       }
+
+      playerFrame = getCurrentFrame( playerFrame );
+      player.gotoAndPlay( playerFrame );
 
       ED.sockets.sendMessage('coordinates', { 
         id: ED.who, 
@@ -112,12 +118,21 @@ ED.player = ( function (window, document, undefined) {
 
 
   createOtherPlayer = function ( playerObject ) {
+    console.log ( playerObject );
     var anotherPlayer;
     anotherPlayer = new otherPlayer ( playerObject );
     return anotherPlayer;
   };
 
+  destroyOtherPlayer = function ( playerObject ) {
+    console.log ( playerObject );
+    stage = ED.easel.getStage();
+    stage.removeChild( otherPlayerContainers[playerObject.who.id] );
+
+  };
+
   ee.addListener ( 'otherPlayerCreated', createOtherPlayer );
+  ee.addListener ( 'otherPlayerLogout', destroyOtherPlayer );
 
   otherPlayer = function ( playerObject ) {
     var callMove,
@@ -134,24 +149,34 @@ ED.player = ( function (window, document, undefined) {
   };
 
   otherPlayer.prototype._move = function ( playerObject ) {
-    otherPlayerContainers[playerObject.id].x = playerObject.x;
-    otherPlayerContainers[playerObject.id].y = playerObject.y;
+    otherPlayerContainers[playerObject.id].direction = 
+      getCurrentFrame( otherPlayerContainers[playerObject.id].direction );
+    otherPlayerContainers[playerObject.id].playerContainer.x = playerObject.x;
+    otherPlayerContainers[playerObject.id].playerContainer.y = playerObject.y;
+    otherPlayerContainers[playerObject.id].player.gotoAndPlay( 
+      otherPlayerContainers[playerObject.id].direction ) ;
 
   };
 
   otherPlayer.prototype._addPlayerToScene = function ( playerObject ) {
-    var otherPlayerContainer;
+    var otherPlayerContainer,
+        otherPlayer;
 
     stage = ED.easel.getStage();
-    var circle = new createjs.Shape();
-    circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+    otherPlayer = ED.Animations.getPlayerAnimation(playerObject.name);
     otherPlayerContainer = new createjs.Container();
     otherPlayerContainer.x = playerObject.who.position.x;
     otherPlayerContainer.y = playerObject.who.position.y;
-    otherPlayerContainer.addChild(circle);
+    otherPlayerContainer.addChild(otherPlayer);
     stage.addChild(otherPlayerContainer);
+
+    otherPlayer.gotoAndPlay( getCurrentFrame(playerFrame) );
     stage.update();
-    otherPlayerContainers[playerObject.who.id] =  otherPlayerContainer;
+    otherPlayerContainers[playerObject.who.id] =  {
+      playerContainer: otherPlayerContainer,
+      player : otherPlayer,
+      direction : 'left'
+    };
   };
 
   return {
