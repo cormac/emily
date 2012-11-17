@@ -30,7 +30,6 @@ ED.sockets = ( function ( document, window, undefined ) {
 
 
     socket.on('logout', function (data) {
-      console.log(data);
       ee.emitEvent( 'otherPlayerLogout', [data] );
     });
 
@@ -43,8 +42,6 @@ ED.sockets = ( function ( document, window, undefined ) {
     var birdsNo = true;
 
     socket.on('bc', function (data) {
-      console.log(data);
-      console.log('About to create a bird');
       ED.bird.createBird(data);
     });
 
@@ -54,7 +51,6 @@ ED.sockets = ( function ( document, window, undefined ) {
 
 
     socket.on('endGame', function (data) {
-      console.log(data);
     });
 
   }

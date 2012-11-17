@@ -8,12 +8,13 @@ ED.Animations = ( function( document, window, undefined ){
 
 
   var getPlayerAnimation = function ( spriteName ) {
-    spriteName = 'father';
+  var playerImport = ED.Sprites.father, 
+      playerSpriteSheet,
+      playerAnimation;
+      console.log( spriteName ); 
     playerSpriteSheet = new createjs.SpriteSheet( ED.Sprites[spriteName] );
-    createjs.SpriteSheetUtils.addFlippedFrames(playerSpriteSheet, true, false, false);
+    //createjs.SpriteSheetUtils.addFlippedFrames(playerSpriteSheet, true, false, false);
     playerAnimation  = new createjs.BitmapAnimation( playerSpriteSheet );
-    playerAnimation.regX = playerAnimation.spriteSheet.frameWidth/2|0;
-    playerAnimation.regY = playerAnimation.spriteSheet.frameHeight / 2 | 0;
     return playerAnimation;
   };
 

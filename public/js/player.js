@@ -40,14 +40,16 @@ ED.player = ( function (window, document, undefined) {
 
 
   player.prototype.addPlayerToStage = function (playerObject)  {
+    console.log( playerObject );
     stage = ED.easel.getStage();
-    player = ED.Animations.getPlayerAnimation(playerObject.name);
+    player = ED.Animations.getPlayerAnimation(playerObject.who.name);
     playerFrame = "left";
     playerContainer = new createjs.Container();
     playerContainer.x  = playerObject.who.position.x;
     playerContainer.y  = playerObject.who.position.y;
     playerContainer.addChild( player );
     stage.addChild(playerContainer);
+    console.log( player );
     player.gotoAndPlay( getCurrentFrame(playerFrame) );
     stage.update();
   };
@@ -63,7 +65,6 @@ ED.player = ( function (window, document, undefined) {
   // handle the key presses
   // limit the attack to 1 per second
   player.prototype.keyDown = function ( e ) {
-      console.log ( e.keyCode );
       if ( e.keyCode === 87 ) { //w
         playerContainer.y = playerContainer.y - offset ;
       }
@@ -118,16 +119,14 @@ ED.player = ( function (window, document, undefined) {
 
 
   createOtherPlayer = function ( playerObject ) {
-    console.log ( playerObject );
     var anotherPlayer;
     anotherPlayer = new otherPlayer ( playerObject );
     return anotherPlayer;
   };
 
   destroyOtherPlayer = function ( playerObject ) {
-    console.log ( playerObject );
     stage = ED.easel.getStage();
-    stage.removeChild( otherPlayerContainers[playerObject.who.id] );
+    stage.removeChild( otherPlayerContainers[playerObject.who.id].playerContainer );
 
   };
 
@@ -138,7 +137,6 @@ ED.player = ( function (window, document, undefined) {
     var callMove,
         self = this;
 
-    console.log ( playerObject );
     this.who = playerObject.who.id;
     this._addPlayerToScene ( playerObject );
 
@@ -159,11 +157,12 @@ ED.player = ( function (window, document, undefined) {
   };
 
   otherPlayer.prototype._addPlayerToScene = function ( playerObject ) {
+    console.log( playerObject );
     var otherPlayerContainer,
         otherPlayer;
 
     stage = ED.easel.getStage();
-    otherPlayer = ED.Animations.getPlayerAnimation(playerObject.name);
+    otherPlayer = ED.Animations.getPlayerAnimation(playerObject.who.name);
     otherPlayerContainer = new createjs.Container();
     otherPlayerContainer.x = playerObject.who.position.x;
     otherPlayerContainer.y = playerObject.who.position.y;
