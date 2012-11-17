@@ -34,6 +34,7 @@ ED.Sprites = ( function( document, window, undefined ){
     "animations": {
       "left": {
         "frames": [0]
+
         },
       "right": {
         "frames": [1]
@@ -43,10 +44,10 @@ ED.Sprites = ( function( document, window, undefined ){
   var brotherSprite = {"frames": [[0, 0, 64, 64, 0, 0, 0], [64, 0, 64, 64, 0, 0, 0], [128, 0, 64, 64, 0, 0, 0], [192, 0, 64, 64, 0, 0, 0], [256, 0, 64, 64, 0, 0, 0]], 
   "animations": {
     "left": {
-      "frames": [0, 1, 2, 3, 4]
+      "frames": [0]
       },
     "right": {
-      "frames": [0, 1, 2, 3, 4]
+      "frames": [0]
       }
     }, "images": ["/img/brother.png"]};
 
