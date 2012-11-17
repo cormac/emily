@@ -1,7 +1,8 @@
 //TODO (Jose) This needs to be an object exporting some methods
 var ED = ED || {};
 ED.sockets = ( function ( document, window, undefined ) {
-  var socket;
+  var socket,
+      ee = ED.events.ee;
 
   function startSockets(){
     //var socket = io.connect('http://192.168.2.92:8080');
@@ -17,14 +18,17 @@ ED.sockets = ( function ( document, window, undefined ) {
 
     socket.on('others', function (data) {
       console.log('other player in: ', data);
+      ee.emitEvent( 'otherPlayerCreated', [data] );
     });
 
     socket.on('player', function (data) {
       console.log(data);
+      ee.emitEvent( 'otherPlayerCreated', [data] );
     });
 
     socket.on('coordinates', function (data) {
       console.log(data);
+      ee.emitEvent( 'otherPlayerMove', [data] );
     });
 
     socket.on('endGame', function (data) {

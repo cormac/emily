@@ -94,20 +94,7 @@ ED.player = ( function (window, document, undefined) {
     document.removeEventListener( 'keydown', keyListener, false );
   };
 
-  ///////////////////////////////////////////////////////////////////////
-  // Observe the attack and deal with the results
-  ///////////////////////////////////////////////////////////////////////
 
-
-    //playerContainer.onPress = function(evt) {
-      //var offset = {x:evt.target.x-evt.stageX, y:evt.target.y-evt.stageY};
-
-      //evt.onMouseMove = function(ev) {
-        //ev.target.x = ev.stageX+offset.x;
-
-        //ev.target.y = ev.stageY+offset.y;
-      //};
-    //};
 
 
   // player creation function
@@ -115,23 +102,30 @@ ED.player = ( function (window, document, undefined) {
     newPlayer = new player();
     return newPlayer;
   };
+  ///////////////////////////////////////////////////////////////////////
+  // Handle other players
+  ///////////////////////////////////////////////////////////////////////
+
 
   createOtherPlayer = function ( playerObject ) {
+    console.log ( playerObject );
     otherPlayer = new otherPlayer ( playerObject );
     return otherPlayer;
   };
 
+  ee.addListener ( 'otherPlayerCreated', createOtherPlayer );
+
   otherPlayer = function ( playerObject ) {
     console.log ( playerObject );
-    this.who = playerObject.who;
+    this.who = playerObject.who.id;
     this._addPlayerToScene ( playerObject );
     ee.addListener( 'otherPlayerMove', this._move );
   };
 
   otherPlayer.prototype._move = function ( playerObject ) {
     if ( playerObject.who === this.who ) {
-      otherPlayerContainer.x = playerObject.position.x;
-      otherPlayerContainer.y = playerObject.position.y;
+      otherPlayerContainer.x = playerObject.who.position.x;
+      otherPlayerContainer.y = playerObject.who.position.y;
     }
 
   };
@@ -141,8 +135,8 @@ ED.player = ( function (window, document, undefined) {
     var circle = new createjs.Shape();
     circle.graphics.beginFill("red").drawCircle(0, 0, 50);
     otherPlayerContainer = new createjs.Container();
-    otherPlayerContainer.x = playerObject.position.x;
-    otherPlayerContainer.y = playerObject.position.y;
+    otherPlayerContainer.x = playerObject.who.position.x;
+    otherPlayerContainer.y = playerObject.who.position.y;
     otherPlayerContainer.addChild(circle);
     stage.addChild(otherPlayerContainer);
     stage.update();
