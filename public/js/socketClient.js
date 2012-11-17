@@ -7,7 +7,6 @@ ED.sockets = ( function ( document, window, undefined ) {
     //var socket = io.connect('http://192.168.2.92:8080');
     socket = io.connect('http://localhost:8080');
     socket.on('youAre', function (data) {
-      console.log(data);
       console.log('You are: ', data);
       document.getElementById('gamer').innerHTML = 'Logged in as: ' + data.who.id;
       ED.who = data.who.id;
