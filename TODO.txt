@@ -1,0 +1,19 @@
+Infrastructure:
+Add a repl for the server : for debugging purposes
+
+
+Tasks:
+- Add a message saying that another X people are needed for the game
+
+
+With more time:
+- for now only the first 4 people logging in will get a spot. If any of the
+  warriors logs off, their position will not be available and we will have to 
+  stop the game. A solution for this would be to keep their positions in the 
+  array and add logic to add other people when one of them is off.
+- There are a couple of reconnection events in the client API that can be used
+  for this too (but won't look into that for now).
+
+Limitations:
+When one user logs off, it's better to close all client and start up again.
+

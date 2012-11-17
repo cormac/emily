@@ -1,0 +1,31 @@
+Forged Cavalier frontend
+
+Cavalier:
+--------
+The cavalier listens for keypresses on a, s, and d key
+He will then emit an event related to that keypress
+a: 'shield attack'
+s: 'sword attack'
+d: 'mace attack'
+
+The other players can then defend the attack
+This defence will emit an event that gets picked up the cavalier. If the defence 
+is successful 'attack blocked' event will fire
+if not, '<attack type> success' will fire
+
+Custom Events are being triggered and caught using the eventemitter library
+https://github.com/Wolfy87/EventEmitter
+
+ToDo:
+Implement animations and display for the cavalier
+Integrate Cavalier events with node backend
+
+Warrior:
+--------
+
+Nothing done so far - 
+Warrior will need to emit events in much the same way as the Cavalier
+
+Event Integration:
+------------------
+We will need to pass the events via node between clients

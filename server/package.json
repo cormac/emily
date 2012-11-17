@@ -1,0 +1,22 @@
+{
+  "name": "forged_cavalier",
+  "version": "0.0.1",
+  "description": "Forged Cavalier Game",
+  "author": {
+    "name": "The dublinjs team"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cormac/cavalier-knight"
+  },
+  "dependencies": {
+    "socket.io": "0.9.11",
+    "express": "3.0.1"
+  },
+  "devDependencies": {
+  },
+  "main": "index",
+  "engines": {
+    "node": ">= 0.8.0"
+  }
+}

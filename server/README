@@ -1,0 +1,21 @@
+Server for the Forged Cavalier Game.
+
+Install:
+--------
+cd into server and run:
+  npm install
+
+Everything in the public directory can be served by express, which by default
+serves index.html automatically.
+
+Progress:
+---------
+So far, you can start up the server with:
+  node server/app.js
+Open a browser on localhost:8080. The first person logging in will be assigned
+as the Cavalier. The next 3 people logging in will be assigned as Warriors. Any
+more users logging in will get a message saying that there are no free spots.
+If any of the users logs out (close the tab), all others get a message saying
+that the connection was lost and the game has ended. They can log in again.
+
+The index page also draws a circle that can be dragged around the scene.
