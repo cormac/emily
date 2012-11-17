@@ -32,6 +32,10 @@ ED.sockets = ( function ( document, window, undefined ) {
     });
 
 
+    socket.on('logout', function (data) {
+      console.log(data);
+      ee.emitEvent( 'otherPlayerLogout', [data] );
+    });
 
     socket.on('endGame', function (data) {
       console.log(data);

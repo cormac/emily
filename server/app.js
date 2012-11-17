@@ -73,6 +73,7 @@ function setUpPlayer(client, playerNo){
     delete players[player.id];
     noPlayers = noPlayers -1;
     setPlayers[playerNo].free = true;
+    client.broadcast.emit('logout', {who: player});
     //TODO we have to delete a Bird
   });
   client.on('coordinates', function (msg) {
