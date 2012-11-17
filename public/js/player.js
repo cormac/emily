@@ -134,17 +134,8 @@ ED.player = ( function (window, document, undefined) {
   };
 
   otherPlayer.prototype._move = function ( playerObject ) {
-    console.log ( playerObject );
-    console.log ( this );
-
-    if ( playerObject.id === this.who ) {
-      for ( var index in otherPlayerContainers ) {
-        console.log ( otherPlayerContainers );
-
-        otherPlayerContainer.x = playerObject.x;
-        otherPlayerContainer.y = playerObject.y;
-      }
-    }
+    otherPlayerContainers[playerObject.id].x = playerObject.x;
+    otherPlayerContainers[playerObject.id].y = playerObject.y;
 
   };
 
