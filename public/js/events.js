@@ -1,5 +1,5 @@
-var CK = CK || {};
-CK.events = ( function () {
+var ED = ED || {};
+ED.events = ( function () {
   var ee;
   ee = new EventEmitter();
 
