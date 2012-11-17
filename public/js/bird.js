@@ -44,8 +44,10 @@ ED.bird = ( function (window, document, undefined) {
 
   var self = this;
   var attacked = function(attack){
-    if (Math.abs(birdContainer.x - attack.x) < 10)
-      console.log('GOT IT!!!!!!!');
+    if (Math.abs(birdContainer.x - attack.x) < 10){
+      var sound = new Audio('./sound/BIrdIsHit.mp3');
+      sound.play();
+    }
   }
 
   ee.addListener ( 'attack', attacked );
