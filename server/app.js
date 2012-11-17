@@ -7,7 +7,7 @@ var express = require('express'),
 var SERVER_PORT = 8080;
 
 server.listen(SERVER_PORT, function(){
-  console.log('Server started at %s', (new Date()).toUTCString());
+  console.log('Server started at %s on port: %s', (new Date()).toUTCString(), SERVER_PORT);
 });
 
 app.configure(function(){
@@ -19,56 +19,25 @@ app.configure(function(){
   app.use(express.static(__dirname + '/../public'));
 });
 
-var theCavalier = {
-  free: true
-};
-var theWarriors = [];
+var players = {};
+var noPlayers = 0;
 
 io.on('connection', function (client) {
-  if (theCavalier.free){ 
-    console.log('Cavalier is free: ', theCavalier.free);
-    theCavalier = setUpCavalier(client)
-    return;
-  }
-
-  if (theWarriors.length < 3)
-    theWarriors[theWarriors.length] = setUpWarrior(client, theWarriors.length);
-  else
-    allPositionsTaken(client);
+  noPlayers = noPlayers + 1;
+  players[noPlayers] = setUpPlayer(client, noPlayers);
+  //TODO we have to create a bird
 });
 
-function setUpCavalier(client){
-  cavalier = {}
-  cavalier.free = false;
-  client.emit('youAre', {who: 'Cavalier'});
+function setUpPlayer(client, playerPos){
+  var player = {};
+  player.id = playerPos;
+  client.emit('youAre', {who: player.id});
+  //client.broadcast.emit('connected', {who: player.id, cause: 'connected'});
   client.on('disconnect', function(){
-    cavalier.free = true;
-    // We need another cavalier
-    console.log('The game has to stop now!');
-    client.emit('endGame', {cause: 'disconnect'});
-    client.broadcast.emit('endGame', {cause: 'disconnect'});
-    theCavalier.free = true;
+    delete players[player.id];
+    //TODO we have to delete a Bird
   });
 
-  return cavalier;
+  return player;
 }
 
-function setUpWarrior(client, warriorPos){
-  var warrior = {};
-  warrior.id = warriorPos + 1;
-  client.emit('youAre', {who: warrior.id});
-  client.on('disconnect', function(){
-    warrior.id = -1;
-    //TODO (Jose) We need to clear the pos in the array
-    console.log('The game has to stop now!'); 
-    client.emit('endGame', {cause: 'disconnect'});
-    client.broadcast.emit('endGame', {cause: 'disconnect'});
-    theWarriors = [];
-  });
-
-  return warrior;
-}
-
-function allPositionsTaken(client){
-  client.emit('youAre', {who: false});
-}

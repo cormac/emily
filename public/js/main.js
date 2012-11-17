@@ -1,11 +1,9 @@
-CK = CK || {};
-CK.start = ( function ( document, window, undefined ) {
+ED = ED || {};
+ED.start = ( function ( document, window, undefined ) {
   var load = function( e ) {
     console.log( 'load' );
-    CK.sockets.startSockets();
-    CK.easel.startPainting();
-    CK.cavalier.create();
-    
+    ED.sockets.startSockets();
+    ED.easel.startPainting();
   };
   document.addEventListener("DOMContentLoaded", load, false);
 

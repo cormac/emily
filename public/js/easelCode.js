@@ -1,6 +1,6 @@
 //TODO (Jose) This needs to be an object exporting some methods
-CK = CK || {};
-CK.easel = ( function ( document, window, undefined ) {
+ED = ED || {};
+ED.easel = ( function ( document, window, undefined ) {
   function startPainting(){
     console.log('all ready to paint');
     var stage = new createjs.Stage("gameCanvas");
