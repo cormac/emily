@@ -1,8 +1,8 @@
 //TODO (Jose) This needs to be an object exporting some methods
 var ED = ED || {};
 ED.sockets = ( function ( document, window, undefined ) {
+  var socket = io.connect('http://192.168.2.91:8080');
   function startSockets(){
-    var socket = io.connect('http://localhost:8080');
     socket.on('youAre', function (data) {
       console.log(data);
       console.log('You are: ', data.who);

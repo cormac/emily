@@ -25,9 +25,6 @@ ED.player = ( function (window, document, undefined) {
   // add event listener for player keypresses
   player.prototype.addListeners = function () {
     document.addEventListener( 'keydown', keyListener, false );
-    ee.addListener( 'shield defence', shieldDefenceListener );
-    ee.addListener( 'sword defence', swordDefenceListener );
-    ee.addListener( 'mace defence', maceDefenceListener );
   };
 
 
@@ -67,6 +64,7 @@ ED.player = ( function (window, document, undefined) {
 
   ///////////////////////////////////////////////////////////////////////
   // Observe the attack and deal with the results
+  ///////////////////////////////////////////////////////////////////////
 
 
 
