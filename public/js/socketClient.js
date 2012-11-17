@@ -8,7 +8,7 @@ ED.sockets = ( function ( document, window, undefined ) {
     socket = io.connect('http://localhost:8080');
     socket.on('youAre', function (data) {
       console.log('You are: ', data);
-      document.getElementById('gamer').innerHTML = 'Logged in as: ' + data.who.id;
+      document.getElementById('gamer').innerHTML = 'Logged in as: ' + data.who.name;
       ED.who = data.who.id;
 
       socket.emit('from_browser', { my: 'should send my name' });
