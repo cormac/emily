@@ -5,9 +5,10 @@
 var ED = ED || {};
 ED.player = ( function (window, document, undefined) {
   var player,
-      otherPlayer = {},
+      otherPlayer,
       offset = 3,
       playerContainer,
+      otherPlayerContainer,
       stage,
       ee = ED.events.ee;
 
@@ -53,17 +54,25 @@ ED.player = ( function (window, document, undefined) {
   // limit the attack to 1 per second
   player.prototype.keyDown = function ( e ) {
       console.log ( e.keyCode );
+      var direction;
       if ( e.keyCode === 87 ) { //w
         playerContainer.y = playerContainer.y - offset ;
+        direction = 'up';
       }
-      if ( e.keyCode === 83 ) { //a
+      if ( e.keyCode === 83 ) { //s
         playerContainer.y = playerContainer.y + offset;
+        direction = 'down';
       }
-      if ( e.keyCode === 65 ) { //s
+      if ( e.keyCode === 65 ) { //a
         playerContainer.x = playerContainer.x - offset;
+        direction = 'left';
       }
       if ( e.keyCode === 68 ) { //d
         playerContainer.x = playerContainer.x + offset ;
+        direction = 'right';
+      }
+      if ( e.keyCode === 32 ) { //space
+        this.triggerAttack ( direction );
       }
 
       ED.sockets.sendMessage('coordinates', { 
@@ -107,8 +116,40 @@ ED.player = ( function (window, document, undefined) {
     return newPlayer;
   };
 
+  createOtherPlayer = function ( playerObject ) {
+    otherPlayer = new otherPlayer ( playerObject );
+    return otherPlayer;
+  };
+
+  otherPlayer = function ( playerObject ) {
+    console.log ( playerObject );
+    this.who = playerObject.who;
+    this._addPlayerToScene ( playerObject );
+    ee.addListener( 'otherPlayerMove', this._move );
+  };
+
+  otherPlayer.prototype._move = function ( playerObject ) {
+    if ( playerObject.who === this.who ) {
+      otherPlayerContainer.x = playerObject.position.x;
+      otherPlayerContainer.y = playerObject.position.y;
+    }
+
+  };
+
+  otherPlayer.prototype._addPlayerToScene = function ( playerObject ) {
+    stage = ED.easel.getStage();
+    var circle = new createjs.Shape();
+    circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+    otherPlayerContainer = new createjs.Container();
+    otherPlayerContainer.x = playerObject.position.x;
+    otherPlayerContainer.y = playerObject.position.y;
+    otherPlayerContainer.addChild(circle);
+    stage.addChild(otherPlayerContainer);
+    stage.update();
+  };
 
   return {
-    createPlayer: createPlayer
+    createPlayer: createPlayer,
+    createOtherPlayer: createOtherPlayer
   };
 }( window, document ) );
