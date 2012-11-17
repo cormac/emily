@@ -38,7 +38,7 @@ io.on('connection', function (client) {
   }
   else {
     players[noPlayers] = setUpPlayer(client, noPlayers);
-    //birds[noBirds] = setUpBird(client, noBirds);
+    birds[noBirds] = setUpBird(client, noBirds);
   }
 });
 

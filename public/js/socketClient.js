@@ -8,7 +8,6 @@ ED.sockets = ( function ( document, window, undefined ) {
     //var socket = io.connect('http://192.168.2.92:8080');
     socket = io.connect('http://localhost:8080');
     socket.on('youAre', function (data) {
-      console.log('You are: ', data);
       document.getElementById('gamer').innerHTML = 'Logged in as: ' + data.who.name;
       ED.who = data.who.id;
       ED.player.createPlayer (data);
@@ -17,24 +16,21 @@ ED.sockets = ( function ( document, window, undefined ) {
     });
 
     socket.on('others', function (data) {
-      console.log('other player in: ', data);
       ee.emitEvent( 'otherPlayerCreated', [data] );
     });
 
+
     socket.on('player', function (data) {
-      console.log('player:', data);
       ee.emitEvent( 'otherPlayerCreated', [data] );
     });
 
     socket.on('coordinates', function (data) {
-      console.log(data);
       ee.emitEvent( 'otherPlayerMove', [data] );
     });
 
 
 
     socket.on('endGame', function (data) {
-      console.log(data);
     });
 
 

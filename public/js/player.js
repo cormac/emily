@@ -141,7 +141,6 @@ ED.player = ( function (window, document, undefined) {
 
   otherPlayer.prototype._addPlayerToScene = function ( playerObject ) {
     var otherPlayerContainer;
-    console.log( 'add other player' );
 
     stage = ED.easel.getStage();
     var circle = new createjs.Shape();
