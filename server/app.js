@@ -63,7 +63,7 @@ function setUpPlayer(client, playerNo){
   var player = {};
   player.id = playerNo;
   player.name = setPlayers[playerNo].name;
-  player.position = { x: (10 + (10 * playerNo)), y: (10 + (5 * playerNo))};
+  player.position = { x: (10 + (10 * playerNo)), y: (200 + (5 * playerNo))};
   setPlayers[playerNo].free = false;
   //Tell yourself who you are
   client.emit('youAre', {who: player});
@@ -121,7 +121,7 @@ function setUpBird(client, birdPos){
   var forward = true;
   var rnd;
   function generateBirdPosX() {
-    if (initialPosX > 400)
+    if (initialPosX > 700)
       forward = false;
 
     if (initialPosX <10)
@@ -135,7 +135,7 @@ function setUpBird(client, birdPos){
     }
   }
   function generateBirdPosY() {
-    if (initialPosY > 300)
+    if (initialPosY > 500)
       forward = false;
 
     if (initialPosY < 10)
