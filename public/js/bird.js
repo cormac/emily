@@ -17,10 +17,7 @@ ED.bird = ( function (window, document, undefined) {
 
   bird.prototype.addBirdToStage = function (birdObject)  {
     stage = ED.easel.getStage();
-    console.log( stage );
-    console.log('addBirdToStage');
     var bird = new createjs.Shape();
-    console.log( bird );
     bird.graphics.beginFill("blue").drawCircle(0, 0, 20);
     birdContainer = new createjs.Container();
     //TODO check these positions, they are coming from the server
@@ -39,13 +36,19 @@ ED.bird = ( function (window, document, undefined) {
   };
 
   callMove = function (data) {
-    console.log('CALLED');
     birdContainer.x = data.x;
     birdContainer.y = data.y;
-    console.log(birdContainer.y);
   };
 
   ee.addListener ( 'birdCoords', callMove );
+
+  var self = this;
+  var attacked = function(attack){
+    if (Math.abs(birdContainer.x - attack.x) < 10)
+      console.log('GOT IT!!!!!!!');
+  }
+
+  ee.addListener ( 'attack', attacked );
 
   return {
     createBird: createBird

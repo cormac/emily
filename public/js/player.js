@@ -79,7 +79,7 @@ ED.player = ( function (window, document, undefined) {
         direction = 'right';
       }
       if ( e.keyCode === 32 ) { //space
-        this.triggerAttack ( direction );
+        this.triggerAttack ( {x: playerContainer.x, y: playerContainer.y} );
       }
 
       playerFrame = getCurrentFrame( playerFrame );
@@ -94,9 +94,8 @@ ED.player = ( function (window, document, undefined) {
 
 
   // fire the attack event
-  player.prototype.triggerAttack = function ( attackType ) {
-    currentAttack = attackType;
-    ee.emitEvent( attackType );
+  player.prototype.triggerAttack = function ( xandy ) {
+    ee.emitEvent( 'attack', [xandy] );
   };
 
   // remove the keydown listener
