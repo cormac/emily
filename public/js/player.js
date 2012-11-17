@@ -5,6 +5,7 @@
 var ED = ED || {};
 ED.player = ( function (window, document, undefined) {
   var player,
+      playerList = [],
       otherPlayer,
       offset = 3,
       playerContainer,
@@ -14,10 +15,10 @@ ED.player = ( function (window, document, undefined) {
 
 
   // constructor for player
-  player = function() {
+  player = function(playerObject) {
     acceptAttack = true;
     this.addListeners();
-    this.addPlayerToStage();
+    this.addPlayerToStage(playerObject);
   };
 
   // implement a keylistener function
@@ -42,7 +43,8 @@ ED.player = ( function (window, document, undefined) {
     circle.graphics.beginFill("green").drawCircle(0, 0, 50);
     playerContainer = new createjs.Container();
     console.log( playerContainer );
-    playerContainer.x = playerContainer.y = 100;
+    playerContainer.x  = playerObject.who.position.x;
+    playerContainer.y  = playerObject.who.position.y;
     playerContainer.addChild(circle);
     stage.addChild(playerContainer);
     stage.update();
@@ -98,8 +100,8 @@ ED.player = ( function (window, document, undefined) {
 
 
   // player creation function
-  createPlayer = function () {
-    newPlayer = new player();
+  createPlayer = function (playerObject) {
+    newPlayer = new player(playerObject);
     return newPlayer;
   };
   ///////////////////////////////////////////////////////////////////////
@@ -108,29 +110,39 @@ ED.player = ( function (window, document, undefined) {
 
 
   createOtherPlayer = function ( playerObject ) {
-    console.log ( playerObject );
-    otherPlayer = new otherPlayer ( playerObject );
-    return otherPlayer;
+    var anotherPlayer;
+    anotherPlayer = new otherPlayer ( playerObject );
+    return anotherPlayer;
   };
 
   ee.addListener ( 'otherPlayerCreated', createOtherPlayer );
 
   otherPlayer = function ( playerObject ) {
+    var callMove,
+        self = this;
+
     console.log ( playerObject );
     this.who = playerObject.who.id;
     this._addPlayerToScene ( playerObject );
-    ee.addListener( 'otherPlayerMove', this._move );
+
+    callMove = function (data) {
+      self._move.call ( self, data );
+    };
+    ee.addListener( 'otherPlayerMove', callMove );
   };
 
   otherPlayer.prototype._move = function ( playerObject ) {
-    if ( playerObject.who === this.who ) {
-      otherPlayerContainer.x = playerObject.who.position.x;
-      otherPlayerContainer.y = playerObject.who.position.y;
+    console.log ( playerObject );
+    if ( playerObject.id === this.who ) {
+      otherPlayerContainer.x = playerObject.x;
+      otherPlayerContainer.y = playerObject.y;
     }
 
   };
 
   otherPlayer.prototype._addPlayerToScene = function ( playerObject ) {
+    console.log( 'add other player' );
+
     stage = ED.easel.getStage();
     var circle = new createjs.Shape();
     circle.graphics.beginFill("red").drawCircle(0, 0, 50);

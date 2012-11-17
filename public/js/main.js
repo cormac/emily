@@ -4,7 +4,6 @@ ED.start = ( function ( document, window, undefined ) {
     console.log( 'load' );
     ED.sockets.startSockets ();
     ED.easel.startPainting ();
-    ED.player.createPlayer ();
   };
   document.addEventListener("DOMContentLoaded", load, false);
 

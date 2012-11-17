@@ -12,6 +12,7 @@ ED.sockets = ( function ( document, window, undefined ) {
       console.log('You are: ', data);
       document.getElementById('gamer').innerHTML = 'Logged in as: ' + data.who.id;
       ED.who = data.who.id;
+      ED.player.createPlayer (data);
 
       socket.emit('from_browser', { my: 'should send my name' });
     });
@@ -30,6 +31,8 @@ ED.sockets = ( function ( document, window, undefined ) {
       console.log(data);
       ee.emitEvent( 'otherPlayerMove', [data] );
     });
+
+
 
     socket.on('endGame', function (data) {
       console.log(data);
