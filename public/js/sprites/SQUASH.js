@@ -47,14 +47,23 @@ ED.Sprites = ( function( document, window, undefined ){
       "frames": [0]
       },
     "right": {
-      "frames": [0]
+      "frames": [1]
       }
     }, "images": ["/img/brother.png"]};
+  var birdSprite  = {
+    "images": ["/img/bird.png"], 
+    "frames": [[0, 0, 32, 16, 0, 0, 0], [32, 0, 32, 16, 0, 0, 0]], 
+    "animations": {
+      "all": {
+        "frames": [0, 1]
+      }
+    }};
 
   return {
     father : fatherSprite,
     mother : motherSprite,
     brother: brotherSprite,
+    bird   : birdSprite,
     sister : sisterSprite
   };
 
