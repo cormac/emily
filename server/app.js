@@ -34,7 +34,7 @@ io.on('connection', function (client) {
 function setUpPlayer(client, playerNo){
   var player = {};
   player.id = playerNo;
-  player.position = { x: 19, y: 10};
+  player.position = { x: (10 + (100 * playerNo)), y: (10 + (50 * playerNo))};
   //Tell yourself who you are
   client.emit('youAre', {who: player});
   //Tell others you arrived
