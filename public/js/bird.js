@@ -17,13 +17,13 @@ ED.bird = ( function (window, document, undefined) {
 
   bird.prototype.addBirdToStage = function (birdObject)  {
     stage = ED.easel.getStage();
-    var bird = new createjs.Shape();
-    bird.graphics.beginFill("blue").drawCircle(0, 0, 20);
+    bird = ED.Animations.getPlayerAnimation("bird");
     birdContainer = new createjs.Container();
     //TODO check these positions, they are coming from the server
     birdContainer.x  = birdObject.x;
     birdContainer.y  = birdObject.y;
     birdContainer.addChild(bird);
+    bird.gotoAndPlay( 'all' );
     stage.addChild(birdContainer);
     stage.update();
 
@@ -49,7 +49,7 @@ ED.bird = ( function (window, document, undefined) {
       sound.play();
       ee.emitEvent( 'gotFeather', [attack] );
     }
-  }
+  };
 
   ee.addListener ( 'attack', attacked );
 

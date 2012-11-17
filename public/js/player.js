@@ -80,7 +80,7 @@ ED.player = ( function (window, document, undefined) {
         playerContainer.x = playerContainer.x + offset ;
         direction = 'right';
       }
-      if ( e.keyCode === 32 ) { //space
+      if ( e.keyCode === 16 ) { //space
         this.triggerAttack ( {x: playerContainer.x,
           y: playerContainer.y,
           playerId: player.id} );
