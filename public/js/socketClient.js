@@ -38,11 +38,21 @@ ED.sockets = ( function ( document, window, undefined ) {
     });
 
 
+    //Handling Birds
 
-    // Bird functionality
+    var birdsNo = true;
     socket.on('birdCoords', function (data) {
       console.log(data);
+      if (birdsNo){
+        ED.bird.createBird(data);
+        birdsNo = false;
+      }
+      ee.emitEvent( 'birdCoords', [data] );
     });
+    socket.on('endGame', function (data) {
+      console.log(data);
+    });
+
   }
 
   function sendMessage(action, object) {

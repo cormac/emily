@@ -1,34 +1,53 @@
 var ED = ED || {};
-ED.bird = ( function ( document, window, undefined ) {
-  var createBird,
-      birdList = {},
+ED.bird = ( function (window, document, undefined) {
+  var bird,
+      birdList = [],
+      birdContainer,
+      stage,
+      acceptAttack,
+      callmove,
       ee = ED.events.ee;
 
-  updateBird = function ( birdObject ) {
 
-    var newBird = new bird ( birdObject );
+  // constructor for bird
+  bird = function(birdObject) {
+    acceptAttack = true;
+    this.addBirdToStage(birdObject);
   };
 
-  bird  = function ( birdObject ) {
-    this._addToScene( birdObject );
-
-  };
-
-  bird.prototype._addToScene = function ( birdObject ) {
-    var birdContainer;
+  bird.prototype.addBirdToStage = function (birdObject)  {
     stage = ED.easel.getStage();
-    var circle = new createjs.Shape();
-    circle.graphics.beginFill("blue").drawCircle(0, 0, 20);
+    console.log( stage );
+    console.log('addBirdToStage');
+    var bird = new createjs.Shape();
+    console.log( bird );
+    bird.graphics.beginFill("blue").drawCircle(0, 0, 20);
     birdContainer = new createjs.Container();
-    birdContainer.x = birdObject.x;
-    birdContainer.y = birdObject.y;
-    birdContainer.addChild(circle);
+    //TODO check these positions, they are coming from the server
+    birdContainer.x  = birdObject.x;
+    birdContainer.y  = birdObject.y;
+    birdContainer.addChild(bird);
     stage.addChild(birdContainer);
     stage.update();
-    birdList[bird] = birdContainer;
+
   };
+
+  // player creation function
+  createBird = function (birdObject) {
+    newBird = new bird(birdObject);
+    return newBird;
+  };
+
+  callMove = function (data) {
+    console.log('CALLED');
+    birdContainer.x = data.x;
+    birdContainer.y = data.y;
+    console.log(birdContainer.y);
+  };
+
+  ee.addListener ( 'birdCoords', callMove );
 
   return {
     createBird: createBird
   };
-} ( document, window ) );
+}( window, document ) );
