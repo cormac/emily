@@ -41,14 +41,18 @@ ED.sockets = ( function ( document, window, undefined ) {
     //Handling Birds
 
     var birdsNo = true;
-    socket.on('birdCoords', function (data) {
+
+    socket.on('bc', function (data) {
       console.log(data);
-      if (birdsNo){
-        ED.bird.createBird(data);
-        birdsNo = false;
-      }
+      console.log('About to create a bird');
+      ED.bird.createBird(data);
+    });
+
+    socket.on('birdCoords', function (data) {
       ee.emitEvent( 'birdCoords', [data] );
     });
+
+
     socket.on('endGame', function (data) {
       console.log(data);
     });
