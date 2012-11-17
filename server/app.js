@@ -109,8 +109,8 @@ function setUpBird(client, birdPos){
   });
 
   bird.birdFlying = function(){
-    var xpos = generateBirdPos();
-    var ypos = generateBirdPos();
+    var xpos = generateBirdPosX();
+    var ypos = generateBirdPosY();
     client.broadcast.emit('birdCoords', { bird: bird.id, x: xpos, y: ypos});
     client.emit('birdCoords', { bird: bird.id, x: xpos, y: ypos});
     console.log({ bird: bird.id, x: xpos, y: ypos});
@@ -120,29 +120,37 @@ function setUpBird(client, birdPos){
   var initialPosY = bird.y;
   var forward = true;
   var rnd;
-  function generateBirdPos() {
-    if (initialPosX > 300 || initialPosY > 300)
+  function generateBirdPosX() {
+    if (initialPosX > 400)
       forward = false;
 
-    if (initialPosX <10 || initialPosY < 10)
+    if (initialPosX <10)
       forward = true;
 
     rnd = Math.floor(Math.random() * 10) + 1;
     if (forward)
-      if (rnd % 2 === 0)
         return initialPosX = initialPosX + rnd;
-      else
-        return initialPosY = initialPosY + rnd;
-    else
-      if (rnd % 2 === 0)
+    else {
         return initialPosX = initialPosX - rnd;
-      else
-        return initialPosY = initialPosY - rnd;
+    }
+  }
+  function generateBirdPosY() {
+    if (initialPosY > 300)
+      forward = false;
 
+    if (initialPosY < 10)
+      forward = true;
+
+    rnd = Math.floor(Math.random() * 11) + 1;
+    if (forward)
+        return initialPosY = initialPosY + rnd;
+    else {
+        return initialPosY = initialPosY - rnd;
+    }
   }
   console.log('Start bird animation on server for bird: ', bird.id);
   
-  var birdFlyingInt = setInterval(bird.birdFlying, 200);
+  var birdFlyingInt = setInterval(bird.birdFlying, 100);
 
   return bird;
 }
