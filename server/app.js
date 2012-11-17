@@ -34,14 +34,13 @@ io.on('connection', function (client) {
 function setUpPlayer(client, playerNo){
   var player = {};
   player.id = playerNo;
-  player.position = { x: (10 + (100 * playerNo)), y: (10 + (50 * playerNo))};
+  player.position = { x: (10 + (10 * playerNo)), y: (10 + (5 * playerNo))};
   //Tell yourself who you are
   client.emit('youAre', {who: player});
   //Tell others you arrived
-  client.broadcast.emit('player', {who: player});
+  //client.broadcast.emit('player', {who: player});
   //Tell me all the other players around
   for (var pla in players){
-    console.log(pla);
     client.emit('others', { who : players[pla] });
   }
 
@@ -80,21 +79,24 @@ function setUpBird(client, birdPos){
     console.log({ bird: bird.id, x: xpos, y: ypos});
   }
   
-  var initialPos = 10;
+  var initialPos = 100;
   var forward = true;
   function generateBirdPos() {
-    if (initialPos < 20 && forward){
-      forward = true;
-      return initialPos = initialPos + 1;
-    }
-    else if (initialPos > 2) {
+    if (initialPos == 200)
       forward = false;
+
+    if (initialPos == 10)
+      forward = true;
+
+    if (forward)
+      return initialPos = initialPos + 1;
+    else
       return initialPos = initialPos - 1;
-    } else if (initialPos == 2) forward = true;
+
   }
-  console.log('Start bird animation on server');
+  console.log('Start bird animation on server for bird: ', bird.id);
   
-  //var birdFlyingInt = setInterval(bird.birdFlying, 1000);
+  var birdFlyingInt = setInterval(bird.birdFlying, 1000);
 
   return bird;
 }
