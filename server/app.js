@@ -19,6 +19,8 @@ app.configure(function(){
   app.use(express.static(__dirname + '/../public'));
 });
 
+var setPlayers = ['father', 'mother', 'brother', 'sister'];
+
 var players = {};
 var birds = {};
 var noPlayers = 0;
@@ -27,18 +29,28 @@ var noBirds = 0;
 io.on('connection', function (client) {
   noPlayers = noPlayers + 1;
   noBirds = noBirds + 1;
-  players[noPlayers] = setUpPlayer(client, noPlayers);
-  //birds[noBirds] = setUpBird(client, noBirds);
+  if (noPlayers > 4){
+    console.log('No more positions');
+    var player = {};
+    player.name = 'No more positions!';
+    player.id = -1;
+    client.emit('youAre', {who: player});
+  }
+  else {
+    players[noPlayers] = setUpPlayer(client, noPlayers);
+    //birds[noBirds] = setUpBird(client, noBirds);
+  }
 });
 
 function setUpPlayer(client, playerNo){
   var player = {};
   player.id = playerNo;
+  player.name = setPlayers[playerNo -1];
   player.position = { x: (10 + (10 * playerNo)), y: (10 + (5 * playerNo))};
   //Tell yourself who you are
   client.emit('youAre', {who: player});
   //Tell others you arrived
-  //client.broadcast.emit('player', {who: player});
+  client.broadcast.emit('player', {who: player});
   //Tell me all the other players around
   for (var pla in players){
     client.emit('others', { who : players[pla] });
