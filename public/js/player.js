@@ -15,7 +15,8 @@ ED.player = ( function (window, document, undefined) {
       newPlayer,
       otherPlayerContainers = {},
       stage,
-      ee = ED.events.ee;
+      ee = ED.events.ee,
+      featherCounter = 0;
 
 
   // constructor for player
@@ -80,7 +81,9 @@ ED.player = ( function (window, document, undefined) {
         direction = 'right';
       }
       if ( e.keyCode === 32 ) { //space
-        this.triggerAttack ( direction );
+        this.triggerAttack ( {x: playerContainer.x,
+          y: playerContainer.y,
+          playerId: player.id} );
       }
 
       playerFrame = getCurrentFrame( playerFrame );
@@ -95,9 +98,8 @@ ED.player = ( function (window, document, undefined) {
 
 
   // fire the attack event
-  player.prototype.triggerAttack = function ( attackType ) {
-    currentAttack = attackType;
-    ee.emitEvent( attackType );
+  player.prototype.triggerAttack = function ( xandy ) {
+    ee.emitEvent( 'attack', [xandy] );
   };
 
   // remove the keydown listener
@@ -106,6 +108,16 @@ ED.player = ( function (window, document, undefined) {
   };
 
 
+  // Listener for when a bird is hit
+  var gotFeather = function(attack){
+    console.log('Player Id back in Player:', attack.playerId);
+    if (attack.playerId == player.id){
+      featherCounter = featherCounter + 1;
+      document.getElementById('featherCounter').innerHTML = 'Number of Feathers is: ' + featherCounter;
+    }
+  }
+
+  ee.addListener ( 'gotFeather', gotFeather );
 
 
   // player creation function

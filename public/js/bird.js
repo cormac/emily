@@ -42,6 +42,18 @@ ED.bird = ( function (window, document, undefined) {
 
   ee.addListener ( 'birdCoords', callMove );
 
+  var self = this;
+  var attacked = function(attack){
+    console.log('Player Id:', attack.playerId);
+    if (Math.abs(birdContainer.x - attack.x) < 10){
+      var sound = new Audio('./sound/BIrdIsHit.mp3');
+      sound.play();
+      ee.emitEvent( 'gotFeather', [attack] );
+    }
+  }
+
+  ee.addListener ( 'attack', attacked );
+
   return {
     createBird: createBird
   };
