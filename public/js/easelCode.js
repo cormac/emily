@@ -20,7 +20,9 @@ ED.easel = ( function ( document, window, undefined ) {
       // this will be active until the user releases the mouse button:
       evt.onMouseMove = function(ev) {
         ev.target.x = ev.stageX+offset.x;
+
         ev.target.y = ev.stageY+offset.y;
+        ED.sockets.sendMessage('coordinates', { id: ED.who, x: ev.target.x, y: ev.target.y});
       }
     }
     createjs.Ticker.addListener(stage);
