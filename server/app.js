@@ -37,6 +37,10 @@ function setUpPlayer(client, playerPos){
     delete players[player.id];
     //TODO we have to delete a Bird
   });
+  client.on('coordinates', function (msg) {
+    client.broadcast.emit('coordinates', msg);
+    //TODO we have to create a bird
+  });
 
   return player;
 }

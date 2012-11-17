@@ -5,6 +5,10 @@
 var ED = ED || {};
 ED.player = ( function (window, document, undefined) {
   var player,
+      otherPlayer = {},
+      offset = 3,
+      playerContainer,
+      stage,
       ee = ED.events.ee;
 
 
@@ -12,6 +16,7 @@ ED.player = ( function (window, document, undefined) {
   player = function() {
     acceptAttack = true;
     this.addListeners();
+    this.addPlayerToStage();
   };
 
   // implement a keylistener function
@@ -27,27 +32,45 @@ ED.player = ( function (window, document, undefined) {
     document.addEventListener( 'keydown', keyListener, false );
   };
 
+  player.prototype.addPlayerToStage = function ()  {
+    stage = ED.easel.getStage();
+    console.log( stage );
+    console.log('addPlayerToStage');
+    var circle = new createjs.Shape();
+    console.log( circle );
+    circle.graphics.beginFill("green").drawCircle(0, 0, 50);
+    playerContainer = new createjs.Container();
+    console.log( playerContainer );
+    playerContainer.x = playerContainer.y = 100;
+    playerContainer.addChild(circle);
+    stage.addChild(playerContainer);
+    stage.update();
+
+  };
+
 
   // handle the key presses
   // limit the attack to 1 per second
   player.prototype.keyDown = function ( e ) {
-    if ( acceptAttack === true ) {
-      if ( e.keyCode === 65 ) {
-        this.triggerAttack('shield attack');
+      console.log ( e.keyCode );
+      if ( e.keyCode === 87 ) { //w
+        playerContainer.y = playerContainer.y - offset ;
       }
-      if ( e.keyCode === 83 ) {
-        this.triggerAttack('sword attack');
+      if ( e.keyCode === 83 ) { //a
+        playerContainer.y = playerContainer.y + offset;
       }
-      if ( e.keyCode === 68 ) {
-        this.triggerAttack('mace attack');
+      if ( e.keyCode === 65 ) { //s
+        playerContainer.x = playerContainer.x - offset;
+      }
+      if ( e.keyCode === 68 ) { //d
+        playerContainer.x = playerContainer.x + offset ;
       }
 
-      // todo ( cormac ) separate this function to handle defensive moves
-      window.setTimeout(processAttack, attackDelay);
-
-      acceptAttack = false;
-      attackSuccess = true;
-    }
+      ED.sockets.sendMessage('coordinates', { 
+        id: ED.who, 
+        x: playerContainer.x, 
+        y: playerContainer.y
+      });
   };
 
 
@@ -67,6 +90,16 @@ ED.player = ( function (window, document, undefined) {
   ///////////////////////////////////////////////////////////////////////
 
 
+    //playerContainer.onPress = function(evt) {
+      //var offset = {x:evt.target.x-evt.stageX, y:evt.target.y-evt.stageY};
+
+      //evt.onMouseMove = function(ev) {
+        //ev.target.x = ev.stageX+offset.x;
+
+        //ev.target.y = ev.stageY+offset.y;
+      //};
+    //};
+
 
   // player creation function
   createPlayer = function () {
@@ -76,6 +109,6 @@ ED.player = ( function (window, document, undefined) {
 
 
   return {
-    create: createPlayer
+    createPlayer: createPlayer
   };
 }( window, document ) );
