@@ -37,16 +37,22 @@ ED.sockets = ( function ( document, window, undefined ) {
       ee.emitEvent( 'otherPlayerLogout', [data] );
     });
 
+
+    //Handling Birds
+
+    var birdsNo = true;
+    socket.on('birdCoords', function (data) {
+      console.log(data);
+      if (birdsNo){
+        ED.bird.createBird(data);
+        birdsNo = false;
+      }
+      ee.emitEvent( 'birdCoords', [data] );
+    });
     socket.on('endGame', function (data) {
       console.log(data);
     });
 
-
-
-    // Bird functionality
-    socket.on('birdCoords', function (data) {
-      console.log(data);
-    });
   }
 
   function sendMessage(action, object) {

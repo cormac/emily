@@ -46,7 +46,9 @@ io.on('connection', function (client) {
     for (var pl in setPlayers) {
       if (setPlayers[pl].free){
         players[pl] = setUpPlayer(client, pl);
-        //birds[noBirds] = setUpBird(client, noBirds);
+        //TODO only one bird for now
+        if (noBirds < 2)
+          birds[noBirds] = setUpBird(client, noBirds);
         break;
       }
     }
@@ -108,22 +110,27 @@ function setUpBird(client, birdPos){
   
   var initialPos = 100;
   var forward = true;
+  var rnd;
   function generateBirdPos() {
-    if (initialPos == 200)
+    if (initialPos > 300)
       forward = false;
 
-    if (initialPos == 10)
+    if (initialPos < 10)
       forward = true;
 
+    rnd = Math.floor(Math.random() * 10) + 1;
     if (forward)
-      return initialPos = initialPos + 1;
+      if (rnd % 2 === 0)
+        return initialPos = initialPos + rnd;
+      else
+        return initialPos = initialPos + rnd + rnd;
     else
-      return initialPos = initialPos - 1;
+      return initialPos = initialPos - rnd;
 
   }
   console.log('Start bird animation on server for bird: ', bird.id);
   
-  var birdFlyingInt = setInterval(bird.birdFlying, 1000);
+  var birdFlyingInt = setInterval(bird.birdFlying, 100);
 
   return bird;
 }
